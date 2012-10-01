@@ -1,0 +1,76 @@
+<html lang="en-US">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"> 
+	<meta name="HandheldFriendly" content="true" /> 
+	<meta name="apple-mobile-web-app-capable" content="yes" /> 
+	<meta http-equiv="cleartype" content="on">
+	<title>iQuestion</title>
+		<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.1.1.css" />
+		<link rel="stylesheet" type="text/css" href="css/styles.css" />
+		<script type="text/javascript" charset="utf-8" src="js/cordova-2.0.0.js"></script>
+		<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+	
+		<script type="text/javascript" src="js/jquery.mobile-1.1.1.js"></script>
+		<script type="text/javascript" src="js/extra.js"></script>
+	 <style> 
+			 dl>dt{
+			 padding:5px;
+			 background-color:white;
+			 }
+			 dd{
+			 
+			 padding:5px;
+			 margin-left:-3px;
+			 }
+			 dt{ 
+			 width:100%;
+			 background-color:red;
+			 }
+	 </style>
+
+</head>
+
+<body>
+ 
+	<div data-role="page" id="home">
+		<div data-role="header" data-position="fixed">  
+		 	<h1>iQuestion </h1>
+			<!--<a href='index.html'  data-ajax='false' data-role='button' data-icon='back' data-back="true" >Back</a>-->
+			<a href="#" data-icon="back" data-rel="back" data-transition='flip' data-direction='reverse'>Back</a>
+		</div>
+		<div data-role="content"> 
+			<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
+			Please enter your support request below. Try to be as detailed as possible when describing the problem. If there are any error messages on the screen, please include them.
+			<br/>
+			<div id="returnmsg"></div>
+			<form name='supportemail' id='supportemail'>
+			<table> 
+							<tr>
+						<td>Email Address</td><td> <input type="text" name="email_support" id="email_support" /></td></tr>
+						<tr><td colspan='2'>
+							<div data-role="fieldcontain">
+							<textarea name="message_support" id="message_support" rows='15' cols='30'></textarea>
+							</div>
+							</td></tr>
+			  
+			</table>
+		</form>
+			</div>
+		</div>
+<script>
+
+ </script>
+<div data-role="footer" data-position="fixed" class="geo_footer">		
+	<div data-role="navbar">
+		<ul>
+				<li><a data-ajax='false' href='javascript:void(0);' onclick ='SendSupport();' data-transition='flip'>SEND</a></li>
+			
+		</ul>
+	</div>
+</div>  
+	</div>
+
+	 
+</body>
+</html>

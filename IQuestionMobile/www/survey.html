@@ -1,0 +1,85 @@
+<html lang="en-US">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"> 
+	<meta name="HandheldFriendly" content="true" /> 
+	<meta name="apple-mobile-web-app-capable" content="yes" /> 
+	<meta http-equiv="cleartype" content="on">
+	<title>iQuestion</title>
+  	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.1.1.css" />
+		<link rel="stylesheet" type="text/css" href="css/media_style.css" />
+		<link rel="stylesheet" type="text/css" href="css/styles.css" />
+		
+		<style> 
+			 dl>dt{
+			 padding:5px;
+			 background-color:white;
+			 }
+			 dd{			 
+			 padding:5px;
+			 margin-left:-3px;
+			 }
+			 dt{ 
+			 width:100%;
+			 background-color:red;
+			 }
+			 .selectrating{
+			 	width: 120px ; 
+			 	min:1;
+			 	max:3;
+			}
+	 </style>
+		<script type="text/javascript" charset="utf-8" src="js/cordova-2.0.0.js"></script>
+				
+		<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+		<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="js/jquery.mobile-1.1.1.js"></script>
+
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/media_script.js"></script>
+		<script type="text/javascript" src="js/extra.js"></script>
+	 
+</head>
+
+<body>
+<div data-role="page" data-dom-cache="false">
+	<div data-role="header" data-add-back-btn="true" data-position="fixed">  
+			<a href='index.html' data-ajax='false' data-role='button'  data-icon="grid" data-iconpos="notext">Home</a>
+		 	<h1>iQuestion</h1>
+				<a href='survey.html' data-role='button' data-icon='plus' onclick="redownload();" class='ui-btn-right'>Re-Download</a> 
+		</div>
+			<div data-role="content"> 
+			<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
+		
+			<div style="align:center;display: inline;" id="quest1" >	
+				<form name='iqmform'>
+				<label for="questiontitle" class="select ui-select"><div id='question'>Downloading survey...</div></label>
+			
+				<div id='desc'></div>
+				
+				<div id='displayquestion' ></div>	
+			</form>
+      </div>
+
+	</div>
+		<!--<div style="bottom:0px;position:fixed;right:5px;" id="responsebutton" >	
+			<button type="submit" id='login' data-theme="a" onClick="changeQuestion('next');" data-transition='slide'>Continue</button> 
+		</div>-->
+
+	</div>
+	
+<div data-position="fixed" class="prog_bar"><div id="myProgressBar"></div></div>	
+		
+<div data-role="footer" data-position="fixed" class="geo_footer">		
+			<div data-role="navbar">
+				<ul>
+					<li><a id='prev' href='#' onClick="goQuestion('','prev','0','1');" data-transition='slide' data-direction='reverse'>Previous</a></li>
+					<li><a id='next' href='#' onClick="submitAnswer('next');" data-transition='slide'>Next</a></li>
+				</ul>
+			</div>
+</div>
+
+</div>
+</body>
+</html>

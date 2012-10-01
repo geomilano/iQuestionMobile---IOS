@@ -1,0 +1,198 @@
+<html lang="en-US">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"> 
+	<meta name="HandheldFriendly" content="true" /> 
+	<meta name="apple-mobile-web-app-capable" content="yes" /> 
+	<meta http-equiv="cleartype" content="on">
+	<title>iQuestion</title>
+		<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.1.1.css" />
+		<link rel="stylesheet" type="text/css" href="css/styles.css" />
+		<script type="text/javascript" charset="utf-8" src="js/cordova-2.0.0.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/phoneInfo.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/ipAddress.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/video.js"></script>
+		<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+		<script type="text/javascript" src="js/jquery.mobile-1.1.1.js"></script>
+
+	 <style> 
+			 dl>dt{
+			 padding:5px;
+			 background-color:white;
+			 }
+			 dd{
+			 
+			 padding:5px;
+			 margin-left:-3px;
+			 }
+			 dt{ 
+			 width:100%;
+			 background-color:red;
+			 }
+	 </style>
+</head>
+
+<body onload="init();">
+ 
+	<div data-role="page" id="home">
+		<div data-role="header" data-position="fixed">  
+		 	<h1>iQuestion </h1>
+			<a href='surveylist.html' data-ajax='false' data-role='button' data-icon='grid' class='ui-btn-right'>Survey</a>
+		</div>
+		<div data-role="content"> 
+			 <h2>Your Phone Info</h2>
+    MSISDN: <span id="msisdn"></span><br/>
+    Country: <span id="country"></span><br/>
+    Operator Name: <span id="operator"></span><br/>
+    Serial No.: <span id="serial"></span><br/>
+    Device ID: <span id="deviceid"></span><br/>
+    Subscribe Number: <span id="sid"></span><br/>
+     <h2>Your IP Address</h2>
+    IP Address: <span id="ipaddress"></span><br/>
+     <h2>iQ App Data</h2>
+    		<span id="appdata"></span><br/>
+				<a data-ajax='false' data-role='button' data-transition='flip' id='demo_delete'>Delete App Data</a>
+	
+				<a data-ajax='false' data-role='button' data-transition='flip' id='play_video'>Play Video</a>
+				<a data-ajax='false' data-role='button' data-transition='flip' id='play_mp4'>Play MP4 Video</a>
+			
+<script>
+	function init(){
+		 console.log("GOT AN ONLOAD!!!")
+		document.addEventListener("deviceready", onDeviceReady, true);
+		}
+	function onDeviceReady() {
+		var root_path;
+		//Get phone detail
+    window.plugins.phoneInfo.getmsisdn(function(msisdn) {
+         var msisdnVal = document.getElementById('msisdn');
+         msisdnVal.innerHTML = msisdn;
+     }, function() {
+         msisdnVal.innerHTML = "Fail to get msisdn";
+     });
+		
+		window.plugins.phoneInfo.getcountry(function(country) {
+           var countryVal = document.getElementById('country');
+           countryVal.innerHTML = country;
+        }, function() {
+           countryVal.innerHTML = "fail to get country";
+        });
+        
+		 window.plugins.phoneInfo.getSimSerialNumber(function(serial) {
+           var serialVal = document.getElementById('serial');
+           serialVal.innerHTML = serial;
+        }, function() {
+            serialVal.innerHTML = "fail to get serial number";
+        });
+		 window.plugins.phoneInfo.getDeviceId(function(did) {
+           var didVal = document.getElementById('deviceid');
+           didVal.innerHTML = did;
+        }, function() {
+            didVal.innerHTML = "fail to get device id";
+     		});
+    
+     window.plugins.phoneInfo.getNetworkOperatorName(function(operator) {
+           var operatorVal = document.getElementById('operator');
+           operatorVal.innerHTML = operator;
+        }, function() {
+            operatorVal.innerHTML = "fail to get operator name";
+        });
+      
+      window.plugins.phoneInfo.getSubscriberId(function(sid) {
+           var sidVal = document.getElementById('sid');
+           sidVal.innerHTML = sid;
+        }, function() {
+            sidVal.innerHTML = "fail to get subscribe ID";
+        });
+     
+     
+     
+		//ipaddress  getipaddress
+		 window.plugins.ipAddress.getipaddress(function(address) {
+            var ipaddressVal = document.getElementById('ipaddress');
+            ipaddressVal.innerHTML = address;
+        }, function() {
+            alert("Cannot get IP address");
+        });
+	
+		
+			window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, function(fs) {
+            console.log("Root = " + fs.root.fullPath);
+            root_path = fs.root.fullPath;
+            var directoryReader = fs.root.createReader();
+            directoryReader.readEntries(function(entries) {
+                var i;
+                var datastr = "";
+                for (i=0; i<entries.length; i++) {
+                	if(entries[i].name != "webviewCache" ){
+	                	datastr += fs.root.fullPath+"/"+entries[i].name+'<br>';
+	                }
+                }
+
+                document.getElementById('appdata').innerHTML = datastr;
+            }, function (error) {
+                alert(error.code);
+            })
+       }, function (error) {
+               alert(error.code);
+       }); 
+      
+     
+		$('#play_video').click(function(){
+			//"file:///data/data/com.example.iquestions/cache/2249.3gp" 
+		  alert(root_path+ "/2249.mp4");
+			window.plugins.videoPlayer.play(root_path+ "/2249.mp4");
+		});
+		$('#play_mp4').click(function(){
+			//"file:///data/data/com.example.iquestions/cache/2249.3gp" 
+		  //console.log(root_path);
+			window.plugins.videoPlayer.play("http://www.youtube.com/watch?v=E0UV5i5jY50");
+		});
+		$('#demo_delete').click(function(){
+			// Delete file from app cache
+				 window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, function(fs) {
+            var directoryReader = fs.root.createReader();
+            directoryReader.readEntries(function(entries) {
+                var i;
+                for (i=0; i<entries.length; i++) {
+                	if(entries[i].name != "webviewCache"){
+                		entries[i].remove(success, fail);
+                		console.log(entries[i].name);
+                	}
+                }
+            }, function (error) {
+                alert("a : " +error.code);
+            })
+       }, function (error) {
+               alert("b : " +error.code);
+       }); 
+		});
+		
+	}
+		
+	 function success(parent) {  
+	 	// alert("Success deleted");
+	   // console.log("Parent Name: " + parent.name);
+	}
+
+	function fail(error) {
+	   //alert("No data to delete");
+	}
+</script>
+		</div>
+<div data-role="footer" data-position="fixed" >		
+		<div data-role="navbar" class="nav-geo" data-iconpos="top">
+		<ul>
+				<li><a id="iq" data-icon="grid" data-iconpos="notext" href='index.html' data-transition='slidedown'> </a></li>
+				<li><a id="support" href="support.html" data-role="button" data-icon="delete" data-iconpos="notext"> </a></li>
+				<li><a id="survey" href="surveylist.html" data-role="button" data-icon="delete" data-iconpos="notext"> </a></li>
+				
+		</ul>
+	</div>
+</div>  
+
+	</div>
+	 		
+	 
+</body>
+</html>

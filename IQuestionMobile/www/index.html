@@ -1,0 +1,174 @@
+<html lang="en-US">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"> 
+	<meta name="HandheldFriendly" content="true" /> 
+	<meta name="apple-mobile-web-app-capable" content="yes" /> 
+	<meta http-equiv="cleartype" content="on">
+	<title>iQuestion</title>
+		<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.1.1.css" />
+		<link rel="stylesheet" type="text/css" href="css/styles.css" />
+		<script type="text/javascript" charset="utf-8" src="js/cordova-2.0.0.js"></script>
+        <script type="text/javascript" src="js/phoneInfo.js"></script>
+		<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+		<script type="text/javascript" src="js/jquery.mobile-1.1.1.js"></script>
+		<script type="text/javascript" src="js/PushNotification.js"></script>
+        <script type="text/javascript" src="js/getMacAddress.js"></script>
+		<script type="text/javascript" src="js/extra.js"></script>
+        <script type="text/javascript" src="js/Config.js"></script>
+        <script type="text/javascript" src="js/Database.js"></script>
+        
+ 	 <style> 
+			 dl>dt{
+			 padding:5px;
+			 background-color:white;
+			 }
+			 dd{
+			 
+			 padding:5px;
+			 margin-left:-3px;
+			 }
+			 dt{ 
+			 width:100%;
+			 background-color:red;
+			 }
+	 </style>
+	<script type="text/javascript">
+		
+		var deviceId;
+		var iQdb;
+		var iQSurveyId = "Q941404";
+        var deviceMacAdd;
+        
+		
+		function init(){			
+			//localStorage.setItem('domain_url', "beta.completemr.com");
+			document.addEventListener('deviceready', deviceReady, true);
+			document.addEventListener('pushwoosh-registered', onPushwooshRegistered, true);
+			document.addEventListener('push-notification', onPushNotification, true);
+		}
+		
+		function deviceReady()
+		{
+            if(iQConfig.PHONE_TYPE == iQConfig.ANDROID) {
+                window.plugins.phoneInfo.getDeviceId(registerDevice, failtoRegister);
+            }
+            
+            if(iQConfig.PHONE_TYPE == iQConfig.IPHONE){
+                //getdevice id first
+                callNativePlugin();
+            }
+		}
+        
+        function callNativePlugin( ) {
+            returnMsg = "";
+            getMacAddress.callNativeFunction( registerDevice, failtoRegister, returnMsg );
+        }
+
+		
+		function registerDevice(devId)
+		{
+            alert(devId);
+            return;
+			deviceId = devId;
+			console.warn("DEVICE ID: " + deviceId)
+			initPushwoosh(); // initialize registration to pushwoosh
+            if(iQConfig.PHONE_TYPE == iQConfig.IPHONE){
+                app.report('DEVICE IS REGISTERING..');
+            }
+		}
+		
+		function failtoRegister()
+		{
+			//
+		}
+		
+		function onPushwooshRegistered(evt)
+		{
+			var pushToken = evt.pushToken;
+			var data = JSON.stringify({"action":"registerDevice", "deviceId":deviceId, "pushToken":evt.pushToken, "deviceType":iQConfig.ANDROID});
+			var url = iQConfig.apiURL + "pushNotification&data=" + data;
+			console.warn("user register data: " + url + "data: " + data);
+			$.getJSON(url, registerCompleted);
+		}
+		
+		function registerCompleted(data, textStatus, xhr)
+		{
+			console.warn("DATA: " + data + " STATUS: " + textStatus + " XHR: " + xhr);
+		}
+		
+		//handler - when receive push-notification from server
+		function onPushNotification(event)
+		{
+            
+            //for android only
+            if(iQConfig.PHONE_TYPE == iQConfig.ANDROID){
+                var title = event.notification.title;
+                var userData = event.notification.userdata;
+                
+                console.warn('user title: ' + title);
+                console.warn('user data: ' + JSON.stringify(userData));                   
+                if(typeof(userData) != "undefined") {
+				
+                }
+            }
+			
+			
+            //for iphone only
+            if(iQConfig.PHONE_TYPE == iQConfig.IPHONE){
+                pushNotification.setApplicationBadgeNumber(0);
+            }
+            
+            navigator.notification.confirm("You've been selected to participate in another paid Survey from LiveTribe. Do you want to open the survey now?", onConfirmSurvey, "New Survey Invitation Confirmation", "Yes, Later");
+		}
+		
+		function onConfirmSurvey(indexButton)
+		{
+			if(indexButton ==  1) // if Yes was clicked
+			{
+				//jump to survey
+				goSurvey(iQSurveyId);
+			} 
+			else 
+			{
+				//do nothing..
+			}
+		}
+	</script>
+</head>
+<body onLoad="init();">
+	<div data-role="page" id="home">
+		<div data-role="header" data-position="fixed">  
+		 	<h1>iQuestion </h1>
+			
+		</div>
+		<div data-role="content"> 
+
+			<ul data-role='listview' data-inset='true'>
+				<li data-role='list-divider'>iQuestion Menu</li> 
+
+				<li><a data-ajax='false' href='surveylist.html' data-transition='flip'>Su2rvey</a></li>
+				<li><a href='support.html'  data-transition='flip'>Support</a></li> 
+				<li><a data-ajax='false' href='test.html'  data-transition='flip'>RND/Test</a></li>
+			</ul>
+			 
+
+		</div>
+	<div data-role="footer" data-position="fixed" >		
+		<div data-role="navbar" class="nav-geo" data-iconpos="top">
+		<ul>
+				<li><a id="iq" data-icon="grid" data-iconpos="notext" href='index.html' data-transition='slidedown'> </a></li>
+				<li><a id="support" href="support.html" data-role="button" data-icon="delete" data-iconpos="notext"> </a></li>
+				<li><a id="survey" href="surveylist.html" data-role="button" data-icon="delete" data-iconpos="notext"> </a></li>
+				
+		</ul>
+	</div>
+</div>  
+
+	</div>
+	 		
+<!-- comment by khamsany -->
+<!-- comment by george -->
+	 
+</body>
+</html>
